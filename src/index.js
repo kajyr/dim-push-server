@@ -27,7 +27,7 @@ async function run() {
 
   const server = await listen(app, process.env.PORT);
   const serverUri = `http://localhost:${server.address().port}`;
-  const wssUri = `ws://localhost:${process.env.WS_PORT}`;
+  const wssUri = `ws://localhost:${process.env.PORT}`;
 
   info("Http Server available at", serverUri);
 
