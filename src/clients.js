@@ -35,7 +35,7 @@ module.exports = {
       return;
     }
 
-    const message = JSON.stringify({ payload });
+    const message = JSON.stringify(payload);
 
     activeClients.forEach(client => {
       client.send(message);
