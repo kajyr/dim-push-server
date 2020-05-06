@@ -32,7 +32,7 @@ async function run() {
   info("Http Server available at", serverUri);
 
   // Socket Server
-  wss = new WebSocket.Server({ port: process.env.WS_PORT });
+  wss = new WebSocket.Server({ server });
   info("WebSocket Server available at", wssUri);
 
   wss.on("connection", function connection(ws) {
