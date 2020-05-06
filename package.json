@@ -1,9 +1,12 @@
 {
-  "name": "test-zeit",
+  "name": "dimensions-push-server",
+  "engines": {
+    "node": "14.x"
+  },
   "version": "1.0.0",
   "main": "server/index.js",
-  "author": "Carlo <carlo.panzi@gmail.com>",
-  "license": "MIT",
+  "author": "Carlo <carlo@uberresearch.com>",
+  "license": "UNLICENSED",
   "scripts": {
     "start": "node src/index.js",
     "watch": "nodemon --watch src ./src/index.js"
