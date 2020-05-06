@@ -11,14 +11,14 @@ module.exports = [
       const { channel_id, ...rest } = req.body;
 
       if (!channel_id) {
-        res.send(400, "Channel is empty");
+        res.status(400);
+      } else {
+        clients.pushMessage(channel_id, rest);
+
+        res.send({
+          ...rest
+        });
       }
-
-      clients.pushMessage(channel_id, rest);
-
-      res.send({
-        ...rest
-      });
     }
   }
 ];
