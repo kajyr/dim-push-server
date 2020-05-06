@@ -5,6 +5,7 @@ const WebSocket = require("ws");
 const colors = require("colors");
 const bodyParser = require("body-parser");
 const routes = require("./routes");
+const clients = require("./clients");
 
 const info = (...msg) => console.log(colors.blue(...msg));
 const log = (...msg) => console.log(colors.yellow(...msg));
@@ -38,16 +39,13 @@ async function run() {
   wss.on("connection", function connection(ws) {
     log("Client connected");
 
-    let sequence = 0;
+    clients.register(ws);
+
+    /*   let sequence = 0;
     const pid = setInterval(() => {
       sequence = sequence + 1;
       ws.send(JSON.stringify({ sequence }));
-    }, 1000);
-
-    ws.on("close", function close() {
-      clearInterval(pid);
-      log("Client disconnected");
-    });
+    }, 1000); */
   });
 }
 
