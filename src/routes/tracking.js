@@ -7,7 +7,6 @@ module.exports = [
       console.log(req.body);
 
       res.send({
-        message: "Thanks",
         ...req.body
       });
     }
