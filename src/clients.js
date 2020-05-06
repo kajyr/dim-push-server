@@ -30,6 +30,11 @@ module.exports = {
 
   pushMessage(channel, payload) {
     const activeClients = clients.get(channel);
+
+    if (!activeClients || activeClients.lenght === 0) {
+      return;
+    }
+
     const message = JSON.stringify({ payload });
 
     activeClients.forEach(client => {

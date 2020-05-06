@@ -23,7 +23,7 @@ function listen(appa, port) {
 
 async function run() {
   // Express
-  app.use(bodyParser.urlencoded());
+  app.use(bodyParser.json());
   routes(app);
 
   const server = await listen(app, process.env.PORT);
@@ -40,12 +40,6 @@ async function run() {
     log("Client connected");
 
     clients.register(ws);
-
-    /*   let sequence = 0;
-    const pid = setInterval(() => {
-      sequence = sequence + 1;
-      ws.send(JSON.stringify({ sequence }));
-    }, 1000); */
   });
 }
 
