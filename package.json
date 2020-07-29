@@ -9,6 +9,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "node src/index.js",
+    "build": "yarn build:fe",
     "watch:be": "nodemon --watch src ./src/index.js",
     "build:fe": "webpack --config webpack.config.js",
     "watch:fe": "webpack --config webpack.config.js --watch"
