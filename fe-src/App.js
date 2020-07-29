@@ -2,6 +2,7 @@ import React, { useEffect, useReducer } from "react";
 
 import Loader from "./Loader";
 import reducer from "./reducer";
+import AgeChart from "./Chart";
 
 const API_ENDPOINT = "/api/jira/issues";
 
@@ -26,6 +27,7 @@ const App = ({}) => {
       <p>
         {state.total} total issues, {state.issues.length} issues loaded
       </p>
+      <AgeChart issues={state.issues} />
     </div>
   );
 };
