@@ -16,7 +16,7 @@ let server;
 let wss;
 
 function listen(appa, port) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const server = appa.listen(port, () => resolve(server));
   });
 }
@@ -43,7 +43,8 @@ async function run() {
   });
 }
 
-function exitHandler(i) {
+function exitHandler(e) {
+  console.log("Exiting...", e);
   wss && wss.close();
 
   server &&
@@ -57,5 +58,7 @@ function exitHandler(i) {
 process.on("exit", () => exitHandler());
 //catches ctrl+c event
 process.on("SIGINT", () => exitHandler());
+
+process.on("uncaughtException", (err) => exitHandler(err));
 
 run();

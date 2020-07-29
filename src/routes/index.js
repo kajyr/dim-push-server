@@ -1,5 +1,5 @@
 const colors = require("colors");
-const routes = [require("./tracking"), require("./solr")];
+const routes = [require("./tracking"), require("./solr"), require("./jira")];
 
 module.exports = function (app) {
   console.info(colors.blue("Routes"));

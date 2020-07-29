@@ -8,7 +8,7 @@ module.exports = [
     handler: (req, res) => {
       const { name } = req.query;
 
-      const strQuery = client.query().q("*").rows(0).start(0);
+      const strQuery = client.query().q("*").start(0);
 
       client.search(strQuery, function (err, result) {
         if (err) {
