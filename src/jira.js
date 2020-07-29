@@ -10,18 +10,13 @@ const auth = `Basic ${btoa(
 )}`;
 
 function searchJira(jql, start = 0) {
-  console.log("query", jql, start);
-  return needle(
-    "get",
-    `https://uberresearch.atlassian.net/rest/api/latest/search?jql=${jql}&startAt=0&maxResults=1000`,
-    null,
-    {
-      headers: {
-        Authorization: auth,
-        "Content-Type": "application/json",
-      },
-    }
-  ).then((res) => res.body);
+  const url = `https://uberresearch.atlassian.net/rest/api/latest/search?jql=${jql}&startAt=${start}&maxResults=1000`;
+  return needle("get", url, null, {
+    headers: {
+      Authorization: auth,
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.body);
 }
 
 const startingResponse = {
@@ -32,23 +27,25 @@ const startingResponse = {
 };
 
 function getPaginated(jql, currentResults = startingResponse) {
-  return searchJira(jql, currentResults.startAt).then((response) => {
-    const { startAt, maxResults, total, issues } = response;
+  return searchJira(jql, currentResults.startAt)
+    .then((response) => {
+      const { startAt, maxResults, total, issues } = response;
 
-    const results = {
-      startAt: currentResults.startAt + startAt,
-      maxResults: currentResults.maxResults + maxResults,
-      total: currentResults.total + total,
-      issues: currentResults.issues.concat(issues),
-    };
+      const results = {
+        startAt: Math.min(currentResults.startAt + maxResults, total),
+        maxResults: currentResults.maxResults + maxResults,
+        total,
+        issues: currentResults.issues.concat(issues),
+      };
 
-    console.log("resp", startAt, maxResults, total, results.startAt);
-
-    /*  if (startAt + maxResults < total) {
-      return getPaginated(jql, results);
-    } */
-    return response;
-  });
+      if (startAt + maxResults < Math.min(total, API_RESULT_LIMIT)) {
+        return getPaginated(jql, results);
+      }
+      return results;
+    })
+    .then((results) => {
+      return { ...results, startAt: 0, maxResults: API_RESULT_LIMIT };
+    });
 }
 
 module.exports = {
