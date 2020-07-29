@@ -12,7 +12,6 @@ const AgeChart = ({ issues }) => {
     getIssuesPartition(issues, (issue) => getTimeDistanceInDays(issue) > dayAge)
   );
 
-  // TODO: Find where we have a count overlap…
   const series = daysAge
     .map((dayAge, ageIndex) => {
       // First range
@@ -29,14 +28,14 @@ const AgeChart = ({ issues }) => {
             name: `> ${daysAge[ageIndex - 1]} days & <= ${dayAge} days`,
             data: [
               partitions[ageIndex - 1][0].length -
-                partitions[ageIndex][1].length,
+                partitions[ageIndex][0].length,
             ],
           },
           {
             name: `> ${dayAge} days & <= ${daysAge[ageIndex + 1]} days`,
             data: [
               partitions[ageIndex][0].length -
-                partitions[ageIndex + 1][1].length,
+                partitions[ageIndex + 1][0].length,
             ],
           },
         ];
