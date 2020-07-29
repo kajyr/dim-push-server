@@ -4,7 +4,7 @@ import Loader from "./Loader";
 import reducer from "./reducer";
 import AgeChart from "./Chart";
 
-const API_ENDPOINT = "/api/jira/issues";
+const API_ENDPOINT = "/api/jira/open";
 
 const App = ({}) => {
   const [state, dispatch] = useReducer(reducer, { loading: true });

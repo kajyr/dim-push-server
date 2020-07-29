@@ -5,34 +5,50 @@ import HighchartsReact from "highcharts-react-official";
 
 import { getIssuesPartition, getTimeDistanceInDays } from "./helper";
 
-const daysAge = [5, 6, 9];
+const daysAge = [30, 40, 60];
 
 const AgeChart = ({ issues }) => {
-  let remainingIssues = issues;
+  const partitions = daysAge.map((dayAge) =>
+    getIssuesPartition(issues, (issue) => getTimeDistanceInDays(issue) > dayAge)
+  );
 
-  // TODO: FIx logical bug
-  const series = daysAge.map((dayAge, ageIndex) => {
-    const issuesPartition = getIssuesPartition(
-      remainingIssues,
-      (issue) => getTimeDistanceInDays(issue) > dayAge
-    );
+  // TODO: Find where we have a count overlap…
+  const series = daysAge
+    .map((dayAge, ageIndex) => {
+      // First range
+      if (ageIndex === 0) {
+        return {
+          name: `<= ${dayAge} days`,
+          data: [partitions[ageIndex][1].length],
+        };
+      }
+      // Middle range
+      if (ageIndex > 0 && ageIndex < daysAge.length - 1) {
+        return [
+          {
+            name: `> ${daysAge[ageIndex - 1]} days & <= ${dayAge} days`,
+            data: [
+              partitions[ageIndex - 1][0].length -
+                partitions[ageIndex][1].length,
+            ],
+          },
+          {
+            name: `> ${dayAge} days & <= ${daysAge[ageIndex + 1]} days`,
+            data: [
+              partitions[ageIndex][0].length -
+                partitions[ageIndex + 1][1].length,
+            ],
+          },
+        ];
+      }
 
-    remainingIssues = remainingIssues.filter(
-      (issue) => getTimeDistanceInDays(issue) > dayAge
-    );
-
-    if (ageIndex === 0) {
+      // Last range
       return {
-        name: `< ${dayAge} days`,
-        data: [issuesPartition[1].length],
+        name: `> ${dayAge} days`,
+        data: [partitions[ageIndex][0].length],
       };
-    }
-
-    return {
-      name: `> ${dayAge} days`,
-      data: [issuesPartition[0].length],
-    };
-  });
+    })
+    .flat();
 
   const options = {
     chart: {
