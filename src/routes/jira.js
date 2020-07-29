@@ -6,16 +6,13 @@ function btoa(str) {
 const auth = `Basic ${btoa(
   `${process.env.JIRA_USER}:${process.env.JIRA_TOKEN}`
 )}`;
-console.log("eee", auth);
 
 module.exports = [
   {
     method: "GET",
-    path: `/jira/issues`,
+    path: `/api/jira/issues`,
 
     handler: (req, res) => {
-      // console.log("eee");
-
       needle(
         "get",
         "https://uberresearch.atlassian.net/rest/api/latest/search",
@@ -27,9 +24,6 @@ module.exports = [
           },
         }
       ).then((response) => {
-        /*         if (!error && response.statusCode == 200) console.log(response.body);
-         */
-
         res.send({
           ok: 1,
           response: response.body,

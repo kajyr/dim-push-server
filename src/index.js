@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const path = require("path");
 const WebSocket = require("ws");
 const colors = require("colors");
 const bodyParser = require("body-parser");
@@ -24,6 +23,7 @@ function listen(appa, port) {
 async function run() {
   // Express
   app.use(bodyParser.json());
+  app.use(express.static("public"));
   routes(app);
 
   const server = await listen(app, process.env.PORT);

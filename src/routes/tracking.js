@@ -3,7 +3,7 @@ const clients = require("../clients");
 module.exports = [
   {
     method: "POST",
-    path: `/notification`,
+    path: `/api/notification`,
 
     handler: (req, res) => {
       console.log("--- new post", req.body);
@@ -16,9 +16,9 @@ module.exports = [
         clients.pushMessage(channel_id, rest);
 
         res.send({
-          ...rest
+          ...rest,
         });
       }
-    }
-  }
+    },
+  },
 ];

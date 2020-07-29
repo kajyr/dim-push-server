@@ -3,7 +3,7 @@ const { client } = require("../solrClient");
 module.exports = [
   {
     method: "GET",
-    path: `/solr/experts`,
+    path: `/api/solr/experts`,
 
     handler: (req, res) => {
       const { name } = req.query;
