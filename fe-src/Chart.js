@@ -3,62 +3,53 @@ import PropTypes from "prop-types";
 import Highcharts, { Chart } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-import { getIssuesPartition, getTimeDistanceInDays } from "./helper";
+import { partition, getTimeDistanceInDays, groupBy, getStatus } from "./helper";
 
 const daysAge = [30, 40, 60];
+const clusters = [
+  { min: 0, max: 30, name: "<= 30 days" },
+  { min: 30, max: 40, name: "> 30 days & <= 40 days" },
+  { min: 40, max: 60, name: "> 40 days & <= 60 days" },
+  { min: 60, max: Infinity, name: "> 60 days" },
+];
+
+const statuses = {
+  "1": "Aperto",
+  "10004": "Selected for Development",
+  "3": "In corso",
+  "4": "Riaperta",
+  "10706": "Technical Review",
+  "11100": "Be Ready to Release",
+};
 
 const AgeChart = ({ issues }) => {
-  const partitions = daysAge.map((dayAge) =>
-    getIssuesPartition(issues, (issue) => getTimeDistanceInDays(issue) > dayAge)
-  );
+  const jiraColumns = groupBy(issues, getStatus)
+    .map((group) => ({
+      ...group,
+      partitions: clusters.map(
+        (cluster) =>
+          group.children.filter((issue) => {
+            const distance = getTimeDistanceInDays(issue);
+            return distance > cluster.min && distance < cluster.max;
+          }).length
+      ),
+    }))
+    .sort((a, b) => parseInt(a.group) - parseInt(b.group));
 
-  const series = daysAge
-    .map((dayAge, ageIndex) => {
-      // First range
-      if (ageIndex === 0) {
-        return {
-          name: `<= ${dayAge} days`,
-          data: [partitions[ageIndex][1].length],
-        };
-      }
-      // Middle range
-      if (ageIndex > 0 && ageIndex < daysAge.length - 1) {
-        return [
-          {
-            name: `> ${daysAge[ageIndex - 1]} days & <= ${dayAge} days`,
-            data: [
-              partitions[ageIndex - 1][0].length -
-                partitions[ageIndex][0].length,
-            ],
-          },
-          {
-            name: `> ${dayAge} days & <= ${daysAge[ageIndex + 1]} days`,
-            data: [
-              partitions[ageIndex][0].length -
-                partitions[ageIndex + 1][0].length,
-            ],
-          },
-        ];
-      }
+  console.log("rrr", jiraColumns);
 
-      // Last range
-      return {
-        name: `> ${dayAge} days`,
-        data: [partitions[ageIndex][0].length],
-      };
-    })
-    .flat();
+  const s = clusters.map((c, i) => {
+    const data = jiraColumns.reduce((acc, column) => {
+      return acc.concat(column.partitions[i]);
+    }, []);
+
+    return { ...c, data };
+  });
 
   const options = {
-    chart: {
-      type: "column",
-    },
-    title: {
-      text: "Stacked column chart",
-    },
-    xAxis: {
-      categories: ["Age"],
-    },
+    chart: { type: "column" },
+    title: { text: "" },
+    xAxis: { categories: jiraColumns.map((c) => statuses[c.group]) },
     yAxis: {
       min: 0,
       title: {
@@ -100,7 +91,7 @@ const AgeChart = ({ issues }) => {
         },
       },
     },
-    series,
+    series: s,
   };
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
