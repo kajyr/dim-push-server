@@ -24,9 +24,7 @@ const App = ({}) => {
   return (
     <div>
       <h1>Jira has issues</h1>
-      <p>
-        {state.total} total issues, {state.issues.length} issues loaded
-      </p>
+      <p>{state.total} total open issues</p>
       <AgeChart issues={state.issues} />
     </div>
   );
