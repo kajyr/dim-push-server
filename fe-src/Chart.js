@@ -14,12 +14,12 @@ const clusters = [
 ];
 
 const statuses = {
-  "1": "Aperto",
+  "1": "Backlog",
   "10004": "Selected for Development",
-  "3": "In corso",
-  "4": "Riaperta",
+  "3": "In progress",
+  "4": "Reopened",
   "10706": "Technical Review",
-  "11100": "Be Ready to Release",
+  "11100": "Ready to Release",
 };
 
 const AgeChart = ({ issues }) => {
